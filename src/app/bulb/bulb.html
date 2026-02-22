@@ -1,0 +1,19 @@
+<div class="bulb-scene" [class.on]="isOn" (click)="toggle()">
+  <svg class="bulb-svg" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle class="glow" cx="60" cy="60" r="55"/>
+    <path class="bulb-body"
+      d="M28 62 Q18 42 28 25 Q40 5 60 2 Q80 5 92 25 Q102 42 92 62 Q87 74 84 84 L36 84 Q33 74 28 62Z"/>
+    <path class="shine" d="M36 28 Q41 18 51 15" stroke-linecap="round"/>
+    <path class="filament" d="M48 82 L44 57 M72 82 L76 57" stroke-linecap="round"/>
+    <rect class="cap" x="34" y="85"  width="52" height="11" rx="3"/>
+    <rect class="cap" x="36" y="99"  width="48" height="11" rx="3"/>
+    <rect class="cap" x="38" y="113" width="44" height="13" rx="4"/>
+    <g class="flash">
+      <line x1="60" y1="-18" x2="60" y2="-30" stroke-linecap="round"/>
+      <line x1="98"  y1="10"  x2="108" y2="0"   stroke-linecap="round"/>
+      <line x1="112" y1="55"  x2="124" y2="52"  stroke-linecap="round"/>
+      <line x1="22"  y1="10"  x2="12"  y2="0"   stroke-linecap="round"/>
+      <line x1="8"   y1="55"  x2="-4"  y2="52"  stroke-linecap="round"/>
+    </g>
+  </svg>
+</div>

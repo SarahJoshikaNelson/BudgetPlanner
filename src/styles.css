@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+app-root {
+  display: block;
+  min-height: 100vh;
+}
+
+/* ── THEME VARIABLES ── */
+:root {
+  --text: rgba(255,255,255,0.85);
+  --text-muted: rgba(255,255,255,0.6);
+  --card-bg: rgba(255,255,255,0.08);
+  --card-border: rgba(255,255,255,0.12);
+  --nav-bg: rgba(63, 29, 120, 0.45);
+}
+
+[data-theme="light"] {
+  --text: rgba(40, 10, 80, 0.9);
+  --text-muted: rgba(40, 10, 80, 0.55);
+  --card-bg: rgba(255,255,255,0.45);
+  --card-border: rgba(180,140,255,0.25);
+  --nav-bg: rgba(200, 170, 255, 0.45);
+}
