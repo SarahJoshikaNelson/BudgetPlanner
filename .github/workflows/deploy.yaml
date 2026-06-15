@@ -1,0 +1,80 @@
+name: Build & Deploy BudgetPlanner
+
+on:
+  push:
+    branches:
+      - main  # This line ensures the workflow ONLY triggers on the main branch
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout code ──────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── 2. Login to GitHub Container Registry ─────────
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: sarahjoshikanelson
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      # ── 3. Build & Push Backend ────────────────────────
+      # Tags with the unique commit hash so every build is distinct
+      - name: Build & Push Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ghcr.io/sarahjoshikanelson/budget-backend:latest
+            ghcr.io/sarahjoshikanelson/budget-backend:${{ github.sha }}
+
+      # ── 4. Build & Push Frontend ───────────────────────
+      - name: Build & Push Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: |
+            ghcr.io/sarahjoshikanelson/budget-frontend:latest
+            ghcr.io/sarahjoshikanelson/budget-frontend:${{ github.sha }}
+
+      # ── 5. Setup kubectl ───────────────────────────────
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+
+      # ── 6. Configure Kubeconfig ────────────────────────
+      - name: Configure Kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+
+      # ── 7. Update images & Apply Kubernetes manifests ──
+      # Dynamically updates the manifests to use the specific commit tag before applying
+      - name: Apply Kubernetes manifests
+        run: |
+          sed -i "s|ghcr.io/sarahjoshikanelson/budget-backend:latest|ghcr.io/sarahjoshikanelson/budget-backend:${{ github.sha }}|g" backend.yaml
+          sed -i "s|ghcr.io/sarahjoshikanelson/budget-frontend:latest|ghcr.io/sarahjoshikanelson/budget-frontend:${{ github.sha }}|g" frontend.yaml
+          kubectl apply -f backend.yaml
+          kubectl apply -f frontend.yaml
+
+      # ── 8. Rollout Restart Both ────────────────────────
+      - name: Restart deployments
+        run: |
+          kubectl rollout restart deployment budget-backend
+          kubectl rollout restart deployment budget-frontend
+
+      # ── 9. Verify pods ─────────────────────────────────
+      - name: Check pods
+        run: kubectl get pods

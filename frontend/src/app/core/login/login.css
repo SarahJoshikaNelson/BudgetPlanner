@@ -1,0 +1,280 @@
+/* ── LOGIN PAGE ── */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.login-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  border-radius: 24px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── ORBS ── */
+.login-wrapper::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(120, 80, 220, 0.18) 0%, transparent 65%);
+  top: -160px;
+  right: -140px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.login-wrapper::after {
+  content: '';
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(60, 120, 220, 0.14) 0%, transparent 65%);
+  bottom: -140px;
+  left: -80px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.orb-3 {
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(125, 35, 170, 0.16) 0%, transparent 60%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+[data-theme="light"] .login-wrapper::before {
+  background: radial-gradient(circle, rgba(120, 80, 220, 0.12) 0%, transparent 65%);
+}
+[data-theme="light"] .login-wrapper::after {
+  background: radial-gradient(circle, rgba(80, 140, 220, 0.10) 0%, transparent 65%);
+}
+[data-theme="light"] .orb-3 {
+  background: radial-gradient(circle, rgba(160, 80, 220, 0.10) 0%, transparent 60%);
+}
+
+/* ── WELCOME PANEL ── */
+.welcome-panel {
+  width: 340px;
+  background: var(--bg-main-2);
+  border: 1px solid var(--card-border);
+  border-right: none;
+  border-radius: 24px 0 0 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── WELCOME CONTENT ── */
+.welcome-content {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+  padding: 48px 40px;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1;
+}
+
+.welcome-login {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.login-wrapper:has(.mat-mdc-tab-body:nth-child(2).mat-mdc-tab-body-active) .welcome-login {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.login-wrapper:has(.mat-mdc-tab-body:nth-child(2).mat-mdc-tab-body-active) .welcome-register {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.welcome-content .label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.welcome-content h1 {
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 14px 0;
+  color: var(--title);
+}
+
+.welcome-content h1 span {
+  color: var(--text-muted);
+}
+
+.welcome-content p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── FORM PANEL ── */
+mat-tab-group {
+  width: 420px;
+  position: relative;
+  z-index: 1;
+}
+
+::ng-deep .mat-mdc-tab-body-wrapper {
+  height: 460px !important;
+  min-height: unset !important;
+  background: transparent;
+}
+
+::ng-deep .mat-mdc-tab-body-content {
+  height: 100%;
+}
+
+::ng-deep .mat-mdc-tab-body {
+  overflow: hidden !important;
+}
+
+mat-card {
+  padding: 32px 40px 40px;
+  border-radius: 0 0 24px 0;
+  background: var(--bg-main-2);
+  border: 1px solid var(--card-border);
+  border-left: none;
+  border-top: none;
+  box-shadow: none;
+  text-align: center;
+  height: 100%;
+  min-height: unset;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+/* ── INPUTS ── */
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 10px;
+}
+
+[data-theme="light"] ::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: rgba(255, 255, 255, 0.55) !important;
+  border-color: rgba(180, 140, 255, 0.30) !important;
+}
+
+::ng-deep .mdc-line-ripple {
+  display: none;
+}
+
+::ng-deep .mat-mdc-form-field-focus-overlay {
+  background: transparent;
+}
+
+::ng-deep .mat-mdc-floating-label,
+::ng-deep .mdc-floating-label {
+  color: var(--text-muted);
+  font-family: 'DM Sans', sans-serif;
+}
+
+::ng-deep .mat-mdc-input-element {
+  color: var(--text) !important;
+  font-family: 'DM Sans', sans-serif !important;
+}
+
+/* ── BUTTON ── */
+button[mat-raised-button] {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  letter-spacing: 2px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  text-transform: uppercase;
+  box-shadow: none;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="light"] button[mat-raised-button] {
+  background: rgba(255, 255, 255, 0.60);
+  border-color: rgba(180, 140, 255, 0.30);
+}
+
+button[mat-raised-button]:hover {
+  background: rgba(120, 80, 220, 0.20);
+  border-color: rgba(120, 80, 220, 0.45);
+}
+
+[data-theme="light"] button[mat-raised-button]:hover {
+  background: rgba(120, 80, 220, 0.10);
+  border-color: rgba(120, 80, 220, 0.40);
+}
+
+/* ── TABS ── */
+::ng-deep .mat-mdc-tab-header {
+  background: var(--bg-main-2);
+  border-bottom: 1px solid var(--card-border);
+  border-radius: 0 24px 0 0;
+  margin-bottom: 0;
+}
+
+::ng-deep .mdc-tab__text-label {
+  color: var(--text-muted) !important;
+  letter-spacing: 1.5px;
+  font-size: 0.75rem;
+  font-family: 'DM Sans', sans-serif;
+  text-transform: uppercase;
+}
+
+::ng-deep .mdc-tab--active .mdc-tab__text-label {
+  color: var(--text) !important;
+  font-weight: 600;
+}
+
+::ng-deep .mdc-tab-indicator__content--underline {
+  border-color: rgba(120, 80, 220, 0.6) !important;
+}

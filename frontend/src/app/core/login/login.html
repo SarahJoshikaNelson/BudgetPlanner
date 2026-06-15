@@ -1,0 +1,84 @@
+<div class="login-wrapper">
+  <div class="orb-3"></div>
+
+  <div class="welcome-panel">
+    <div class="welcome-content welcome-login">
+      <span class="label">Finance</span>
+      <h1>Hello,<br><span>Welcome!</span></h1>
+      <p>Manage your finances easily and clearly. Keep track of income, expenses, and savings goals.</p>
+    </div>
+    <div class="welcome-content welcome-register">
+      <span class="label">New here?</span>
+      <h1>Create<br><span>account.</span></h1>
+      <p>Just a few seconds – then your financial overview is yours.</p>
+    </div>
+  </div>
+
+  <mat-tab-group>
+    <mat-tab label="Login">
+      <mat-card>
+        <mat-card-content>
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput [formField]="loginForm.email">
+            @for (error of loginForm.email().errors(); track error.kind) {
+              <mat-error>{{ error.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput type="password" [formField]="loginForm.password">
+            @for (error of loginForm.password().errors(); track error.kind) {
+              <mat-error>{{ error.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" (click)="login()">Login</button>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Register">
+      <mat-card>
+        <mat-card-content>
+          <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input matInput [formField]="registerForm.username">
+            @for (error of registerForm.username().errors(); track error.kind) {
+              <mat-error>{{ error.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput [formField]="registerForm.email">
+            @for (error of registerForm.email().errors(); track error.kind) {
+              <mat-error>{{ error.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput type="password" [formField]="registerForm.password">
+            @for (error of registerForm.password().errors(); track error.kind) {
+              <mat-error>{{ error.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" (click)="register()">Register</button>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    @if(authService.isLoggedIn()){
+      <mat-tab label="Logout">
+        <mat-card>
+          <mat-card-content>
+            <button mat-raised-button color="primary" (click)="logout()">Logout</button>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+    }
+  </mat-tab-group>
+</div>

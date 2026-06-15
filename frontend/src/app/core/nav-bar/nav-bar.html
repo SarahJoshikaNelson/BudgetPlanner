@@ -1,0 +1,135 @@
+<div *ngIf="showWorkspaceBanner()" class="ws-top-banner">
+  <div class="ws-top-banner__left">
+    <span class="ws-top-banner__dot"></span>
+    <span class="ws-top-banner__label">Viewing</span>
+    <div class="ws-top-banner__sep"></div>
+    <span class="ws-top-banner__name">{{ workspaceName() }}</span>
+  </div>
+  <div class="ws-top-banner__right">
+    <div class="ws-top-banner__badge">Read only</div>
+    <button class="ws-top-banner__leave" (click)="workspaceService.leaveActiveWorkspace()">
+      Leave workspace
+    </button>
+  </div>
+</div>
+
+<nav [class.ws-banner-active]="showWorkspaceBanner()">
+  <div class="nav-inner">
+
+    <a routerLink="/home" class="pig-link">
+  <img [src]="theme.isLight() ? 'piggy-bank_darkmode.png' : 'piggy-bank_lightmode.png'"
+       alt="Piggy Bank"
+       class="pig-img" />
+</a>
+
+    <div class="nav-links">
+      <a routerLink="/" class="nav-link" routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact: true}">Home</a>
+
+      @if (authService.isLoggedIn()) {
+        @for (link of visibleNavLinks(); track link.path) {
+          <a [routerLink]="link.path" class="nav-link" routerLinkActive="active">{{ link.label }}</a>
+        }
+      } @else {
+        <span class="nav-link nav-link-locked" (click)="navigateToProtected('/income-expenses')">Income/Expenses</span>
+        <span class="nav-link nav-link-locked" (click)="navigateToProtected('/financedashboard')">Dashboard</span>
+        <span class="nav-link nav-link-locked" (click)="navigateToProtected('/savings')">Savings</span>
+        <span class="nav-link nav-link-locked" (click)="navigateToProtected('/notes')">Notes</span>
+      }
+    </div>
+
+    <div class="circle-btns">
+
+      <a routerLink="/shared" class="circle-btn" title="Shared">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+          <polyline points="16 6 12 2 8 6" />
+          <line x1="12" y1="2" x2="12" y2="15" />
+        </svg>
+      </a>
+
+      <div class="profile-wrapper">
+        <button class="circle-btn profile-btn" title="Profile"
+                (click)="onProfileClick()"
+                [style.background]="authService.isLoggedIn() ? profileColor() : ''"
+                [style.border-color]="authService.isLoggedIn() ? profileColor() : ''">
+          @if (authService.isLoggedIn()) {
+            <span class="profile-initial">{{ getInitial() }}</span>
+          } @else {
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          }
+        </button>
+
+        @if (showProfile) {
+          <div class="profile-dropdown" (click)="$event.stopPropagation()">
+
+            <div class="profile-header">
+              <div class="profile-avatar-large" [style.background]="profileColor()">
+                {{ getInitial() }}
+              </div>
+              <div class="profile-info">
+                <span class="profile-username">{{ authService.getCurrentUser()?.name }}</span>
+                <span class="profile-email">{{ authService.getCurrentUser()?.email }}</span>
+              </div>
+            </div>
+
+            <div class="profile-divider"></div>
+
+            <div class="profile-section-label">Profile Color</div>
+            <div class="color-picker">
+              @for (color of profileColors; track color) {
+                <button class="color-dot"
+                        [style.background]="color"
+                        [class.active]="profileColor() === color"
+                        (click)="setColor(color)">
+                </button>
+              }
+            </div>
+
+            <div class="profile-divider"></div>
+
+            <button class="logout-btn" (click)="logout()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              Logout
+            </button>
+
+          </div>
+        }
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+@if (showProfile) {
+  <div class="profile-backdrop" (click)="showProfile = false"></div>
+}
+
+@if (showLogin) {
+  <div class="modal-overlay" (click)="showLogin = false">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <app-login (loginSuccess)="onLoginSuccess()" />
+    </div>
+  </div>
+}
+
+@if (showWorkspaceBanner()) {
+  <div class="ws-leave-pill">
+    <span class="ws-leave-pill__viewing">Viewing</span>
+    <span class="ws-leave-pill__name">{{ workspaceName() }}</span>
+    <div class="ws-leave-pill__sep"></div>
+    <button class="ws-leave-pill__btn" (click)="workspaceService.leaveActiveWorkspace()">
+      Leave
+    </button>
+  </div>
+}

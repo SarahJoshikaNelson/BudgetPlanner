@@ -1,0 +1,44 @@
+<footer class="footer">
+  <div class="footer-inner">
+
+    <div class="footer-brand">
+      <span class="footer-logo-text">Budget Planner</span>
+      <p class="footer-tagline">Keep track of your finances – simple, clear and smart.</p>
+      <button class="back-to-top" (click)="scrollToTop()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+          <path d="M18 15l-6-6-6 6"/>
+        </svg>
+        Back to top
+      </button>
+    </div>
+
+    <div>
+      <p class="footer-col-title">Navigation</p>
+      <ul class="footer-links">
+        <li><a routerLink="/">Home</a></li>
+        <li><a routerLink="/ausgaben">Income / Expenses</a></li>
+        <li><a routerLink="/finanzuebersicht">Financial Overview</a></li>
+        <li><a routerLink="/sparziele">Savings Goals</a></li>
+        <li><a routerLink="/notizen">Notes</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="footer-col-title">Team</p>
+      @for (member of team; track member.name) {
+        <div class="team-member">
+          <div class="team-avatar" [style.background]="member.color">{{ member.initials }}</div>
+          <span class="team-name">{{ member.name }}</span>
+        </div>
+      }
+    </div>
+
+  </div>
+
+  <div class="footer-bottom-bar">
+    <div class="footer-bottom">
+      <span>© 2025 Budget Planner. All rights reserved.</span>
+    </div>
+  </div>
+</footer>

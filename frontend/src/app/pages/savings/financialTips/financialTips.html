@@ -1,0 +1,31 @@
+<section class="tips-section">
+  <h2>Financial Tips</h2>
+
+  <div class="tips-wrapper"
+       (mouseenter)="pauseAutoSlide()"
+       (mouseleave)="resumeAutoSlide()">
+
+    <button class="arrow left" (click)="prev()">&#10094;</button>
+
+    <div class="tips-slider">
+      <div 
+        class="tip"
+        *ngFor="let tip of tips; let i = index"
+        [class.active]="i === currentIndex">
+        <h3>{{ tip.title }}</h3>
+        <p>{{ tip.text }}</p>
+      </div>
+    </div>
+
+    <button class="arrow right" (click)="next()">&#10095;</button>
+  </div>
+
+  <!-- Dots -->
+  <div class="dots">
+    <span 
+      *ngFor="let tip of tips; let i = index"
+      [class.active]="i === currentIndex"
+      (click)="currentIndex = i">
+    </span>
+  </div>
+</section>

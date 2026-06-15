@@ -1,0 +1,320 @@
+:host {
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ─── Card ───────────────────────────────────────── */
+.csv-card {
+  position: relative;
+  background: rgba(22, 30, 50, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 1.4rem 1.5rem;
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ─── Header ─────────────────────────────────────── */
+.csv-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.csv-header-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.csv-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.csv-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.csv-sub {
+  font-size: 0.74rem;
+  color: #475569;
+}
+
+/* ─── Drop zone ──────────────────────────────────── */
+.drop-zone {
+  border: 1.5px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.drop-zone:hover,
+.drop-zone.dragging {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.drop-icon {
+  color: #334155;
+  margin-bottom: 0.2rem;
+  transition: color 0.2s;
+}
+
+.drop-zone:hover .drop-icon,
+.drop-zone.dragging .drop-icon {
+  color: #64748b;
+}
+
+.drop-text {
+  font-size: 0.83rem;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.drop-sub {
+  font-size: 0.73rem;
+  color: #334155;
+}
+
+/* ─── Preview Table (5 Columns now!) ─────────────── */
+.preview-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.preview-count {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+}
+
+.preview-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.preview-table {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.preview-row {
+  display: grid;
+  grid-template-columns: 1fr 75px 65px 70px 70px; /* Perfekt für alle 5 Felder */
+  padding: 0.45rem 0.65rem;
+  font-size: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.preview-row:last-child {
+  border-bottom: none;
+}
+
+.header-row {
+  background: rgba(255, 255, 255, 0.04);
+  color: #475569;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.p-name { color: #cbd5e1; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.p-date { color: #475569; }
+.p-amount { font-weight: 500; color: #94a3b8; }
+.p-amount.income  { color: #4ade80; }
+.p-amount.expense { color: #f87171; }
+
+.tag-badge-ui { background: rgba(255, 255, 255, 0.06); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-size: 0.68rem; }
+
+.type-badge { padding: 2px 7px; border-radius: 999px; font-size: 0.65rem; font-weight: 500; display: inline-block; text-align: center; }
+.badge-income  { background: rgba(74,222,128,0.15); color: #4ade80; }
+.badge-expense { background: rgba(248,113,113,0.15); color: #f87171; }
+
+.preview-more { text-align: center; font-size: 0.72rem; color: #334155; padding: 0.4rem; background: rgba(255, 255, 255, 0.02); }
+
+/* ─── Hint Container Layout ──────────────────────── */
+.csv-hint-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.hint-title {
+  font-size: 0.72rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.format-blueprint-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.format-blueprint {
+  flex-grow: 1;
+  font-size: 0.68rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 5px 10px;
+  border-radius: 6px;
+  color: #94a3b8;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* ─── Blue (i) Button ───────────────────────────── */
+.info-tooltip-container {
+  display: flex;
+  align-items: center;
+}
+
+.info-toggle-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #94a3b8;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.info-toggle-btn:hover,
+.info-toggle-btn.active {
+  background: #2563eb;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+/* ─── Die neue, LÄNGERE Info-Box (Dark Mode First) ── */
+.absolute-help-box {
+  position: absolute;
+  bottom: 130%;
+  right: 0;
+  width: calc(100% - 2px); 
+  background: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px 14px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: smoothShow 0.15s ease-out;
+}
+
+.absolute-help-box::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 4px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: #1e293b transparent transparent transparent;
+}
+
+.help-heading { margin: 0; font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.03em; }
+
+.example-box { display: flex; align-items: center; gap: 8px; background: rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.05); padding: 6px 10px; border-radius: 6px; }
+.example-label { font-weight: 700; color: #475569; font-size: 0.68rem; text-transform: uppercase; }
+.example-line { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.68rem; white-space: nowrap; color: #94a3b8; }
+
+.ex-name  { color: #e2e8f0; font-weight: 500; }
+.ex-date  { color: #3b82f6; }
+.ex-price { color: #ef4444; }
+.ex-tag   { color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 1px 4px; border-radius: 3px; }
+.ex-type  { color: #22c55e; }
+
+.help-footer { margin: 0; font-size: 10px; color: #475569; font-style: italic; }
+
+@keyframes smoothShow {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Buttons ────────────────────────────────────── */
+.btn-cancel { padding: 0.35rem 0.8rem; background: none; border: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.78rem; font-family: 'DM Sans', sans-serif; color: #64748b; cursor: pointer; border-radius: 7px; transition: background 0.15s, color 0.15s; }
+.btn-cancel:hover { background: rgba(255, 255, 255, 0.06); color: #94a3b8; }
+
+.btn-save { padding: 0.35rem 0.9rem; background: #f0f4f8; color: #0d1117; border: none; border-radius: 7px; font-size: 0.78rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.2s; }
+.btn-save:hover { background: white; }
+
+/* ─── Light Mode Overrides ───────────────────────── */
+:host-context([data-theme="light"]) .csv-card { background: rgba(255, 255, 255, 0.92); border-color: rgba(0, 0, 0, 0.08); box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07); }
+:host-context([data-theme="light"]) .csv-header-icon { background: #f1f5f9; border-color: #e2e8f0; color: #64748b; }
+:host-context([data-theme="light"]) .csv-title { color: #0f172a; }
+:host-context([data-theme="light"]) .csv-sub { color: #94a3b8; }
+:host-context([data-theme="light"]) .drop-zone { border-color: #e2e8f0; background: #f8fafc; }
+:host-context([data-theme="light"]) .drop-zone:hover, :host-context([data-theme="light"]) .drop-zone.dragging { border-color: #94a3b8; background: #f1f5f9; }
+:host-context([data-theme="light"]) .drop-icon { color: #cbd5e1; }
+:host-context([data-theme="light"]) .drop-text { color: #475569; }
+:host-context([data-theme="light"]) .drop-sub { color: #94a3b8; }
+:host-context([data-theme="light"]) .preview-table { border-color: #f1f5f9; }
+:host-context([data-theme="light"]) .preview-row { border-bottom-color: #f8fafc; }
+:host-context([data-theme="light"]) .header-row { background: #f8fafc; color: #94a3b8; }
+:host-context([data-theme="light"]) .p-name { color: #1e293b; }
+:host-context([data-theme="light"]) .p-date { color: #64748b; }
+:host-context([data-theme="light"]) .p-amount { color: #475569; }
+:host-context([data-theme="light"]) .p-amount.income { color: #16a34a; }
+:host-context([data-theme="light"]) .p-amount.expense { color: #dc2626; }
+:host-context([data-theme="light"]) .tag-badge-ui { background: #f1f5f9; color: #64748b; }
+:host-context([data-theme="light"]) .badge-income { background: #dcfce7; color: #16a34a; }
+:host-context([data-theme="light"]) .badge-expense { background: #fee2e2; color: #dc2626; }
+:host-context([data-theme="light"]) .preview-count { color: #64748b; }
+:host-context([data-theme="light"]) .preview-more { background: #fafafa; color: #94a3b8; }
+:host-context([data-theme="light"]) .csv-hint-container .hint-title { color: #94a3b8; }
+:host-context([data-theme="light"]) .format-blueprint { background: #f1f5f9; border-color: #e2e8f0; color: #64748b; }
+:host-context([data-theme="light"]) .info-toggle-btn { background: #e2e8f0; color: #64748b; }
+:host-context([data-theme="light"]) .btn-cancel { color: #64748b; border-color: #e2e8f0; }
+:host-context([data-theme="light"]) .btn-cancel:hover { background: #f1f5f9; }
+:host-context([data-theme="light"]) .btn-save { background: #0f172a; color: white; }
+:host-context([data-theme="light"]) .btn-save:hover { background: #1e293b; }
+
+/* Light Mode Info-Box Overrides */
+:host-context([data-theme="light"]) .absolute-help-box { background: #ffffff; border-color: #e2e8f0; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); }
+:host-context([data-theme="light"]) .absolute-help-box::after { border-top-color: #ffffff; }
+:host-context([data-theme="light"]) .example-box { background: #f8fafc; border-color: #e2e8f0; }
+:host-context([data-theme="light"]) .ex-name { color: #0f172a; }
+:host-context([data-theme="light"]) .ex-tag { color: #0369a1; background: #e0f2fe; }

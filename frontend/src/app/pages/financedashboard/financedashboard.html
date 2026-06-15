@@ -1,0 +1,302 @@
+<div class="page">
+
+  <!-- ── PAGE HEADER ──────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <h1 class="page-title">Financial Overview</h1>
+      <span class="page-subtitle">Track income, expenses & savings</span>
+    </div>
+  </div>
+
+  <!-- ── KPI STRIP ─────────────────────────────────────────── -->
+  <div class="kpi-strip">
+    <div class="kpi-card income-kpi">
+      <div class="kpi-icon"><i class="ti ti-trending-up"></i></div>
+      <div class="kpi-body">
+        <div class="kpi-label">Total Income</div>
+        <div class="kpi-value">{{ formatCurrency(yearlyIncome()) }}</div>
+        <div class="kpi-sub">Full year {{ selectedYear() }}</div>
+      </div>
+    </div>
+    <div class="kpi-card expense-kpi">
+      <div class="kpi-icon"><i class="ti ti-trending-down"></i></div>
+      <div class="kpi-body">
+        <div class="kpi-label">Total Expenses</div>
+        <div class="kpi-value">{{ formatCurrency(yearlyExpenses()) }}</div>
+        <div class="kpi-sub">Full year {{ selectedYear() }}</div>
+      </div>
+    </div>
+    <div class="kpi-card savings-kpi">
+      <div class="kpi-icon"><i class="ti ti-piggy-bank"></i></div>
+      <div class="kpi-body">
+        <div class="kpi-label">Net Savings</div>
+        <div class="kpi-value">{{ formatCurrency(yearlyBalance()) }}</div>
+        <div class="kpi-sub">Full year {{ selectedYear() }}</div>
+      </div>
+    </div>
+    <div class="kpi-card rate-kpi">
+      <div class="kpi-icon"><i class="ti ti-percentage"></i></div>
+      <div class="kpi-body">
+        <div class="kpi-label">Savings Rate</div>
+        <div class="kpi-value">{{ savingsRate() }}%</div>
+        <div class="kpi-sub">Of total income</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── OVERVIEW CARD ─────────────────────────────────────── -->
+  <div class="card yearly-card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <h2 class="card-title">Overview</h2>
+
+        <!-- TIME RANGE TABS -->
+        <div class="view-tabs">
+          <button class="view-tab" [class.active]="timeRange() === 'day'"   (click)="timeRange.set('day')">
+            <i class="ti ti-clock-hour-4"></i> Day
+          </button>
+          <button class="view-tab" [class.active]="timeRange() === 'week'"  (click)="timeRange.set('week')">
+            <i class="ti ti-calendar-week"></i> Week
+          </button>
+          <button class="view-tab" [class.active]="timeRange() === 'month'" (click)="timeRange.set('month')">
+            <i class="ti ti-calendar-month"></i> Month
+          </button>
+          <button class="view-tab" [class.active]="timeRange() === 'year'"  (click)="timeRange.set('year')">
+            <i class="ti ti-calendar-stats"></i> Year
+          </button>
+        </div>
+
+        <!-- CHART TYPE TABS -->
+        <div class="view-tabs">
+          <button class="view-tab" [class.active]="yearlyView() === 'line'" (click)="yearlyView.set('line')">
+            <i class="ti ti-chart-line"></i> Line
+          </button>
+          <button class="view-tab" [class.active]="yearlyView() === 'bar'"  (click)="yearlyView.set('bar')">
+            <i class="ti ti-chart-bar"></i> Bar
+          </button>
+          <button class="view-tab" [class.active]="yearlyView() === 'area'" (click)="yearlyView.set('area')">
+            <i class="ti ti-chart-area"></i> Area
+          </button>
+        </div>
+      </div>
+
+      <div class="overview-right">
+        <!-- PERIOD NAVIGATOR — changes based on timeRange -->
+        <div class="period-nav" *ngIf="timeRange() === 'month'">
+          <button class="nav-btn-sm" (click)="prevYear()">&#8249;</button>
+          <div class="month-badge-blue">{{ selectedYear() }}</div>
+          <button class="nav-btn-sm" (click)="nextYear()">&#8250;</button>
+        </div>
+        <div class="period-nav" *ngIf="timeRange() === 'week'">
+          <button class="nav-btn-sm" (click)="prevWeek()">&#8249;</button>
+          <div class="month-badge-blue">Week {{ selectedWeek() }} · {{ selectedYear() }}</div>
+          <button class="nav-btn-sm" (click)="nextWeek()">&#8250;</button>
+        </div>
+        <div class="period-nav" *ngIf="timeRange() === 'day'">
+          <button class="nav-btn-sm" (click)="prevDay()">&#8249;</button>
+          <div class="month-badge-blue">{{ selectedDay() | date:'d MMM y' }}</div>
+          <button class="nav-btn-sm" (click)="nextDay()">&#8250;</button>
+        </div>
+        <div class="period-nav" *ngIf="timeRange() === 'year'">
+          <div class="month-badge-blue">All years</div>
+        </div>
+
+        <!-- LEGEND -->
+        <div class="chart-legend">
+          <span class="legend-pill green"><span class="legend-dot"></span>Income</span>
+          <span class="legend-pill red"><span class="legend-dot"></span>Expenses</span>
+          <span class="legend-pill violet"><span class="legend-dot"></span>Savings</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-wrap" style="height: 260px;">
+      <canvas #yearlyChart></canvas>
+    </div>
+  </div>
+
+  <!-- ── MONTHLY DETAILS CARD ──────────────────────────────── -->
+  <div class="card monthly-card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <h2 class="card-title">Monthly Breakdown</h2>
+        <div class="month-nav-inline">
+          <button class="nav-btn-sm" (click)="prevMonth()">&#8249;</button>
+          <div class="month-badge-blue">{{ monthNames[selectedMonth()] }} {{ selectedYear() }}</div>
+          <button class="nav-btn-sm" (click)="nextMonth()">&#8250;</button>
+        </div>
+      </div>
+      <div class="view-tabs">
+        <button class="view-tab" [class.active]="monthView() === 'donut'" (click)="monthView.set('donut')">
+          <i class="ti ti-chart-donut"></i> Donut
+        </button>
+        <button class="view-tab" [class.active]="monthView() === 'grid'"  (click)="monthView.set('grid')">
+          <i class="ti ti-layout-grid"></i> Grid
+        </button>
+        <button class="view-tab" [class.active]="monthView() === 'list'"  (click)="monthView.set('list')">
+          <i class="ti ti-list"></i> List
+        </button>
+      </div>
+    </div>
+
+    <!-- DONUT VIEW -->
+    <div class="month-donut-layout" *ngIf="monthView() === 'donut'">
+      <div class="pie-col">
+        <div class="chart-wrap" style="height: 240px;">
+          <canvas #pieChart></canvas>
+        </div>
+      </div>
+      <div class="category-list-col">
+        <div class="cost-header">
+          <span class="cost-total-label">Total Spending</span>
+          <span class="cost-total">{{ formatCurrency(totalMonthExpenses()) }}</span>
+        </div>
+        <div class="cost-bar-row">
+          <div *ngFor="let cat of monthCategoryData(); let i = index"
+               class="cost-bar-segment"
+               [style.width.%]="cat.percentage"
+               [style.background]="pieColors[i % pieColors.length]"
+               [title]="cat.category + ': ' + cat.percentage.toFixed(1) + '%'"></div>
+        </div>
+        <div class="category-entries">
+          <div class="category-entry" *ngFor="let cat of monthCategoryData(); let i = index">
+            <div class="cat-entry-left">
+              <span class="cost-dot" [style.background]="pieColors[i % pieColors.length]"></span>
+              <span class="cat-name">{{ cat.category }}</span>
+            </div>
+            <div class="cat-entry-right">
+              <span class="cat-amount">{{ formatCurrency(cat.amount) }}</span>
+              <span class="cat-pct">{{ cat.percentage.toFixed(0) }}%</span>
+            </div>
+          </div>
+          <div class="no-data" *ngIf="monthCategoryData().length === 0">No expenses this month</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRID VIEW -->
+    <div class="month-grid-view" *ngIf="monthView() === 'grid'">
+      <div class="cat-grid-card" *ngFor="let cat of monthCategoryData(); let i = index">
+        <div class="cat-grid-bar"
+             [style.background]="pieColors[i % pieColors.length]"
+             [style.height.%]="cat.percentage * 0.8 + 10"></div>
+        <div class="cat-grid-info">
+          <span class="cat-grid-name">{{ cat.category }}</span>
+          <span class="cat-grid-amount">{{ formatCurrency(cat.amount) }}</span>
+          <span class="cat-grid-pct" [style.color]="pieColors[i % pieColors.length]">{{ cat.percentage.toFixed(0) }}%</span>
+        </div>
+      </div>
+      <div class="no-data" *ngIf="monthCategoryData().length === 0">No expenses this month</div>
+    </div>
+
+    <!-- LIST VIEW -->
+    <div class="month-list-view" *ngIf="monthView() === 'list'">
+      <div class="list-row" *ngFor="let cat of monthCategoryData(); let i = index">
+        <div class="list-row-left">
+          <span class="list-dot" [style.background]="pieColors[i % pieColors.length]"></span>
+          <span class="list-cat-name">{{ cat.category }}</span>
+        </div>
+        <div class="list-bar-track">
+          <div class="list-bar-fill"
+               [style.width.%]="cat.percentage"
+               [style.background]="pieColors[i % pieColors.length]"></div>
+        </div>
+        <div class="list-row-right">
+          <span class="list-amount">{{ formatCurrency(cat.amount) }}</span>
+          <span class="list-pct">{{ cat.percentage.toFixed(0) }}%</span>
+        </div>
+      </div>
+      <div class="no-data" *ngIf="monthCategoryData().length === 0">No expenses this month</div>
+    </div>
+  </div>
+
+  <!-- ── COMPARISON CARD ────────────────────────────────────── -->
+  <div class="card comparison-card">
+    <div class="card-header">
+      <h2 class="card-title">Period Comparison</h2>
+    </div>
+
+    <div class="comparison-selectors">
+      <!-- PERIOD A -->
+      <div class="comp-period-block blue">
+        <div class="comp-period-label">Period A</div>
+        <div class="comp-period-year">
+          <button class="nav-btn-sm" (click)="month1PrevYear()">&#8249;</button>
+          <div class="year-badge-sm blue">{{ month1Year() }}</div>
+          <button class="nav-btn-sm" (click)="month1NextYear()">&#8250;</button>
+        </div>
+        <div class="comp-period-month">
+          <button class="nav-btn-sm" (click)="month1Prev()">&#8249;</button>
+          <div class="month-badge-blue">{{ monthShort[month1Month()] }}</div>
+          <button class="nav-btn-sm" (click)="month1Next()">&#8250;</button>
+        </div>
+      </div>
+
+      <span class="vs-text">vs</span>
+
+      <!-- PERIOD B -->
+      <div class="comp-period-block purple">
+        <div class="comp-period-label">Period B</div>
+        <div class="comp-period-year">
+          <button class="nav-btn-sm" (click)="month2PrevYear()">&#8249;</button>
+          <div class="year-badge-sm purple">{{ month2Year() }}</div>
+          <button class="nav-btn-sm" (click)="month2NextYear()">&#8250;</button>
+        </div>
+        <div class="comp-period-month">
+          <button class="nav-btn-sm" (click)="month2Prev()">&#8249;</button>
+          <div class="month-badge-purple">{{ monthShort[month2Month()] }}</div>
+          <button class="nav-btn-sm" (click)="month2Next()">&#8250;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="comparison-layout">
+      <div class="comparison-chart-wrap">
+        <canvas #comparisonChart></canvas>
+      </div>
+      <div class="diff-panel">
+        <div class="diff-card diff-income">
+          <div class="diff-icon"><i class="ti ti-arrow-up-right"></i></div>
+          <div class="diff-body">
+            <div class="diff-label">Income difference</div>
+            <div class="diff-value"
+                 [class.positive]="comparisonData().m2.income - comparisonData().m1.income >= 0"
+                 [class.negative]="comparisonData().m2.income - comparisonData().m1.income < 0">
+              {{ (comparisonData().m2.income - comparisonData().m1.income) >= 0 ? '+' : '' }}{{ formatCurrency(comparisonData().m2.income - comparisonData().m1.income) }}
+            </div>
+          </div>
+        </div>
+        <div class="diff-card diff-expense">
+          <div class="diff-icon"><i class="ti ti-arrow-down-right"></i></div>
+          <div class="diff-body">
+            <div class="diff-label">Expense difference</div>
+            <div class="diff-value"
+                 [class.positive]="(comparisonData().m2.expenses - comparisonData().m1.expenses) <= 0"
+                 [class.negative]="(comparisonData().m2.expenses - comparisonData().m1.expenses) > 0">
+              {{ (comparisonData().m2.expenses - comparisonData().m1.expenses) >= 0 ? '+' : '' }}{{ formatCurrency(comparisonData().m2.expenses - comparisonData().m1.expenses) }}
+            </div>
+          </div>
+        </div>
+        <div class="diff-card diff-balance">
+          <div class="diff-icon"><i class="ti ti-scale"></i></div>
+          <div class="diff-body">
+            <div class="diff-label">Balance difference</div>
+            <div class="diff-value"
+                 [class.positive]="comparisonDiff().balance >= 0"
+                 [class.negative]="comparisonDiff().balance < 0">
+              {{ comparisonDiff().balance >= 0 ? '+' : '' }}{{ formatCurrency(comparisonDiff().balance) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ACTIONS ────────────────────────────────────── -->
+  <div class="footer-actions">
+    <button class="export-btn" (click)="downloadPDF()">
+      <i class="ti ti-download"></i> Export PDF
+    </button>
+  </div>
+
+</div>

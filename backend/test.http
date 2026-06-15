@@ -1,0 +1,152 @@
+@base = http://localhost:3000/api
+
+### ping
+GET {{base}}/ping
+
+### Ping
+GET http://localhost:3000/api/budget/ping
+
+### ── TRANSACTIONS ─────────────────────────────────────────
+
+### Alle Transaktionen von User 1 abrufen
+GET {{base}}/transactions/1
+
+### Einnahme hinzufügen
+POST {{base}}/transactions
+Content-Type: application/json
+
+{
+  "user_id": 1,
+  "name": "Gehalt Juni",
+  "amount": 3500,
+  "type": "income",
+  "category": "Gehalt",
+  "date": "2026-06-01"
+}
+
+### Ausgabe hinzufügen
+POST {{base}}/transactions
+Content-Type: application/json
+
+{
+  "user_id": 1,
+  "name": "Miete Juni",
+  "amount": 1200,
+  "type": "expense",
+  "category": "Wohnung",
+  "date": "2026-06-02"
+}
+
+### Ausgabe hinzufügen – Essen
+POST {{base}}/transactions
+Content-Type: application/json
+
+{
+  "user_id": 1,
+  "name": "Supermarkt",
+  "amount": 95,
+  "type": "expense",
+  "category": "Essen",
+  "date": "2026-06-05"
+}
+
+### Transaktion löschen (ID anpassen)
+DELETE {{base}}/transactions/1
+
+### ── FEHLER-TESTS ──────────────────────────────────────────
+
+### Pflichtfeld fehlt → sollte 400 zurückgeben
+POST {{base}}/transactions
+Content-Type: application/json
+
+{
+  "user_id": 1,
+  "amount": 500
+}
+
+### Ungültiger type → sollte 500 zurückgeben (DB constraint)
+POST {{base}}/transactions
+Content-Type: application/json
+
+{
+  "user_id": 1,
+  "name": "Test",
+  "amount": 100,
+  "type": "invalid",
+  "category": "Test",
+  "date": "2026-06-01"
+}
+
+### ── AUTH ────────────────────────────────────────────────
+
+### Registrieren
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@testuser.com",
+  "password": "password123"
+}
+
+### Login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@testuser.com",
+  "password": "password123"
+}
+### ── TOKEN HIER EINTRAGEN ─────────────────────────────────
+
+@token =01e1c888a2b4ceab7f06885d9e4a1bced67fbb381a402ceefcff75377991d2243d00424e23e36ff16445adf0cce981510995ee820d18daa59d9225373115464c
+### ── TOKEN TEST ───────────────────────────────────────────
+
+### 3. Kein Token → sollte 401 zurückgeben
+GET {{base}}/budget/transactions/2
+
+### 4. Gültiger Token → sollte funktionieren
+GET {{base}}/budget/transactions/
+Authorization: Bearer {{token}}
+
+### 5. Falscher Token → sollte 401 zurückgeben
+GET {{base}}/budget/transactions/
+Authorization: Bearer dasistkeingueltigertoken
+
+### ── TRANSACTIONS (mit Token) ─────────────────────────────
+
+### Alle Transaktionen abrufen
+GET http://localhost:3000/api/budget/transactions
+Authorization: Bearer {{token}}
+
+### Einnahme hinzufügen
+POST {{base}}/budget/transactions
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "user_id": 1,
+  "name": "Gehalt Juni",
+  "amount": 3500,
+  "type": "income",
+  "category": "Gehalt",
+  "date": "2026-065-01"
+}
+
+### Ausgabe hinzufügen
+POST {{base}}/budget/transactions
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "user_id": 1,
+  "name": "Miete Juni",
+  "amount": 1200,
+  "type": "expense",
+  "category": "Wohnung",
+  "date": "2026-06-02"
+}
+
+### Transaktion löschen
+DELETE {{base}}/budget/transactions/1
+Authorization: Bearer {{token}}

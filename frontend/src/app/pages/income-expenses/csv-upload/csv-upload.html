@@ -1,0 +1,108 @@
+<div class="csv-card">
+
+  <div class="csv-header">
+    <div class="csv-header-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="16" height="16">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+    </div>
+    <div class="csv-title-group">
+      <span class="csv-title">CSV Import</span>
+      <span class="csv-sub">Import transactions</span>
+    </div>
+  </div>
+
+  <div class="drop-zone"
+       [class.dragging]="isDragging"
+       (dragover)="onDragOver($event)"
+       (dragleave)="isDragging = false"
+       (drop)="onDrop($event)"
+       (click)="fileInput.click()">
+    <svg class="drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28">
+      <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
+      <path d="M12 12v9"/>
+      <path d="m16 16-4-4-4 4"/>
+    </svg>
+    <span class="drop-text">Drop CSV here</span>
+    <span class="drop-sub">or click to browse</span>
+    <input #fileInput type="file" accept=".csv" hidden (change)="onFileSelect($event)"/>
+  </div>
+
+  <div class="preview-section" *ngIf="rows.length > 0">
+
+    <div class="preview-header">
+      <span class="preview-count">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="margin-right:4px;vertical-align:middle">
+          <path d="M9 12l2 2 4-4"/>
+          <circle cx="12" cy="12" r="9"/>
+        </svg>
+        {{ rows.length }} entries
+      </span>
+      <div class="preview-actions">
+        <button class="btn-cancel" (click)="clear()">Discard</button>
+        <button class="btn-save" (click)="importAll()">Import all</button>
+      </div>
+    </div>
+
+    <div class="preview-table">
+      <div class="preview-row header-row">
+        <span>Name</span>
+        <span>Date</span>
+        <span>Amount</span>
+        <span>Tag</span>
+        <span>Type</span>
+      </div>
+      <div class="preview-row" *ngFor="let row of rows.slice(0, 5)">
+        <span class="p-name">{{ row.name }}</span>
+        <span class="p-date">{{ row.date }}</span>
+        <span class="p-amount" [class.income]="row.type === 'income'" [class.expense]="row.type === 'expense'">
+          € {{ row.amount }}
+        </span>
+        <span class="p-tag">
+          <span class="tag-badge-ui">{{ row.tag }}</span>
+        </span>
+        <span>
+          <span class="type-badge" [class.badge-income]="row.type === 'income'" [class.badge-expense]="row.type === 'expense'">
+            {{ row.type === 'income' ? 'Income' : 'Expense' }}
+          </span>
+        </span>
+      </div>
+      <div class="preview-more" *ngIf="rows.length > 5">
+        + {{ rows.length - 5 }} more
+      </div>
+    </div>
+
+  </div>
+
+  <div class="csv-hint-container">
+    <span class="hint-title">Expected Format</span>
+    
+    <div class="format-blueprint-wrapper">
+      <code class="format-blueprint">name, date, price, tag, type</code>
+      
+      <div class="info-tooltip-container">
+        <button type="button" class="info-toggle-btn" [class.active]="showHelp" (click)="showHelp = !showHelp">
+          i
+        </button>
+        
+        <div class="absolute-help-box" *ngIf="showHelp">
+          <p class="help-heading">Example Structure:</p>
+          <div class="example-box">
+            <span class="example-label">E.g.</span>
+            <div class="example-line">
+              <span class="ex-name">Uber Trip</span>, 
+              <span class="ex-date">2026-05-18</span>, 
+              <span class="ex-price">14.32</span>, 
+              <span class="ex-tag">Transport</span>, 
+              <span class="ex-type">expense</span>
+            </div>
+          </div>
+          <p class="help-footer">* Empty tags fallback automatically to "notag".</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

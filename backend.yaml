@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: budget-db-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: budget-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: budget-backend
+  template:
+    metadata:
+      labels:
+        app: budget-backend
+    spec:
+      containers:
+        - name: budget-backend
+          image: ghcr.io/sarahjoshikanelson/budget-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: SUPABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: budget-secrets
+                  key: SUPABASE_URL
+            - name: SUPABASE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: budget-secrets
+                  key: SUPABASE_KEY
+            - name: TINK_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: budget-secrets
+                  key: TINK_CLIENT_ID
+            - name: TINK_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: budget-secrets
+                  key: TINK_CLIENT_SECRET
+            - name: TINK_REDIRECT_URI
+              valueFrom:
+                secretKeyRef:
+                  name: budget-secrets
+                  key: TINK_REDIRECT_URI
+            - name: FRONTEND_URL
+              valueFrom:
+                secretKeyRef:
+                  name: budget-secrets
+                  key: FRONTEND_URL
+          volumeMounts:
+            - name: db-storage
+              mountPath: /app/data
+      volumes:
+        - name: db-storage
+          persistentVolumeClaim:
+            claimName: budget-db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: budget-backend-service
+spec:
+  selector:
+    app: budget-backend
+  ports:
+    - port: 3000
+      targetPort: 3000

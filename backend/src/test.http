@@ -1,0 +1,79 @@
+@base = http://localhost:3000/api/budget
+@baseSavings = http://localhost:3000/api
+
+### ping
+GET {{base}}/ping
+
+###
+POST {{base}}/data
+Content-Type: application/json
+
+{
+    "title": "Billa",
+    "amount": 25.5
+}
+
+
+
+
+### Alle Sparziele abrufen
+GET {{baseSavings}}/savings
+
+### Neues Sparziel erstellen
+POST {{baseSavings}}/savings
+Content-Type: application/json
+
+{
+  "id": "1",
+  "name": "Urlaub",
+  "targetAmount": 2000,
+  "autoSave": false,
+  "colorClass": "color-violet",
+  "userId": 1
+}
+
+### Einzahlung machen
+POST {{baseSavings}}/savings/1/deposit
+Content-Type: application/json
+
+{
+  "amount": 500
+}
+
+
+### register
+POST {{baseSavings}}/register
+Content-Type: application/json
+
+{
+  "username": "franziska",
+  "email": "f.katz@gmail.com",
+  "password": "geheim112233"
+}
+
+
+### Add Transaction
+POST http://localhost:3000/api/budget/transactions
+Content-Type: application/json
+
+{
+  "user_id": 1,
+  "name": "Testüberweisung",
+  "amount": 250.00,
+  "type": "income",
+  "category": "Arbeit",
+  "date": "2026-05-12"
+}
+
+### Add Expense
+POST http://localhost:3000/api/budget/transactions
+Content-Type: application/json
+
+{
+  "user_id": 1,
+  "name": "Supermarkt",
+  "amount": 45.90,
+  "type": "expense",
+  "category": "Essen",
+  "date": "2026-05-12"
+}

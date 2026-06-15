@@ -1,0 +1,267 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">Income & Expenses</h1>
+    <div class="divider"></div>
+  </div>
+
+  <div class="bento-grid">
+    <div class="card main-card">
+
+      <div class="tab-toggle">
+        <button class="tab-btn" [class.active]="activeTab() === 'income'"
+                (click)="switchTab('income')">Income</button>
+        <button class="tab-btn" [class.active]="activeTab() === 'expense'"
+                (click)="switchTab('expense')">Expenses</button>
+      </div>
+
+      <div class="search-row">
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input class="search-input" type="text"
+                 placeholder="Search by name, tag, date or amount…"
+                 [ngModel]="searchQuery()"
+                 (ngModelChange)="searchQuery.set($event)"/>
+        </div>
+        <button class="add-btn" (click)="openModal()" title="Add"
+                *ngIf="!isViewOnly()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="filter-row">
+        <span class="filter-label">Filter</span>
+        <div class="filter-tags">
+          <button *ngFor="let tag of currentTagDefs()"
+                  class="filter-tag"
+                  [ngClass]="tag.color"
+                  [class.selected]="selectedTags().includes(tag.name)"
+                  (click)="toggleTag(tag.name)">{{ tag.name }}</button>
+          <button *ngIf="selectedTags().length > 0"
+                  class="clear-filters"
+                  (click)="selectedTags.set([])">Clear filters</button>
+        </div>
+      </div>
+
+      <div class="table-section" [@contentSwitch]="animKey()">
+        <h2 class="section-title">Overview — {{ currentMonthLabel() }}</h2>
+
+        <div class="table-header">
+          <span>Name</span>
+          <span>Date</span>
+          <span>Amount</span>
+          <span></span>
+        </div>
+
+        <div class="empty-state" *ngIf="filteredTransactions().length === 0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="36" height="36" class="empty-icon">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <path d="M2 10h20"/>
+          </svg>
+          <span>No entries for {{ currentMonthLabel() }}</span>
+        </div>
+
+        <div class="table-row" *ngFor="let t of filteredTransactions()">
+          <div class="row-name">
+            <span class="name-text">{{ t.name }}</span>
+            <div class="row-tags">
+              <span *ngFor="let tag of t.tags"
+                    class="row-tag" [ngClass]="getTagColor(tag)">{{ tag }}</span>
+            </div>
+          </div>
+          <span class="row-date">{{ t.date }}</span>
+          <span class="row-amount"
+                [class.income]="t.type === 'income'"
+                [class.expense]="t.type === 'expense'">
+            {{ t.type === 'income' ? '+' : '−' }} € {{ t.amount | number:'1.2-2':'de' }}
+          </span>
+          <div class="row-actions" *ngIf="!isViewOnly()">
+            <button class="action-btn" (click)="openEdit(t)" title="Edit">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+            <button class="action-btn action-delete" (click)="deleteTransaction(t.id)" title="Delete">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6M14 11v6"/>
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+              </svg>
+            </button>
+          </div>
+          <div class="row-actions" *ngIf="isViewOnly()"></div>
+        </div>
+      </div>
+
+      <div class="month-nav">
+        <button class="month-btn" (click)="prevMonth()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+        <span class="month-label">{{ currentMonthLabel() }}</span>
+        <button class="month-btn" (click)="nextMonth()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+
+      <!-- Monthly Summary Card -->
+      <div class="card summary-card">
+        <div class="summary-header">
+          <span class="summary-title">Monthly Overview</span>
+          <span class="summary-badge">{{ currentMonthLabel() }}</span>
+        </div>
+        <div class="summary-rule"></div>
+        <div class="summary-rows">
+          <div class="summary-row">
+            <div class="summary-row-left">
+              <span class="dot dot-income"></span>
+              <span class="summary-label">Income</span>
+            </div>
+            <span class="summary-value val-income">
+              + € {{ totalIncome() | number:'1.2-2':'de' }}
+            </span>
+          </div>
+          <div class="summary-row">
+            <div class="summary-row-left">
+              <span class="dot dot-expense"></span>
+              <span class="summary-label">Expenses</span>
+            </div>
+            <span class="summary-value val-expense">
+              − € {{ totalExpenses() | number:'1.2-2':'de' }}
+            </span>
+          </div>
+          <div class="summary-rule"></div>
+          <div class="summary-row balance-row">
+            <span class="summary-label balance-label">Balance</span>
+            <span class="summary-value balance-value"
+                  [class.pos]="netBalance() >= 0"
+                  [class.neg]="netBalance() < 0">
+              {{ netBalance() >= 0 ? '+' : '−' }} € {{ (netBalance() < 0 ? -netBalance() : netBalance()) | number:'1.2-2':'de' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CSV Upload -->
+      <app-csv-upload *ngIf="!isViewOnly()" (imported)="onCsvImport($event)"></app-csv-upload>
+
+      <!-- Bank Connection Widget -->
+      <div class="card bank-card" *ngIf="!isViewOnly()">
+        <div class="summary-header">
+          <span class="summary-title">Bank Connection</span>
+          <span class="summary-badge" *ngIf="bankConnected()">Connected</span>
+        </div>
+        <div class="summary-rule"></div>
+
+        <ng-container *ngIf="!bankConnected(); else connectedState">
+          <p class="bank-desc">Connect your bank to automatically import transactions.</p>
+          <button class="btn-connect-bank" (click)="connectBank()" [disabled]="bankLinking()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+              <line x1="12" y1="12" x2="12" y2="16"/>
+              <line x1="10" y1="14" x2="14" y2="14"/>
+            </svg>
+            {{ bankLinking() ? 'Connecting…' : 'Connect Bank Account' }}
+          </button>
+        </ng-container>
+
+        <ng-template #connectedState>
+          <p class="bank-desc">Your bank account is connected and transactions have been imported.</p>
+          <button class="btn-connect-bank" (click)="syncBank()" [disabled]="bankSyncing()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <path d="M23 4v6h-6M1 20v-6h6"/>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+            {{ bankSyncing() ? 'Syncing…' : 'Sync Again' }}
+          </button>
+        </ng-template>
+
+        <p class="bank-error" *ngIf="bankError()">{{ bankError() }}</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" *ngIf="showModal() && !isViewOnly()" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h3>{{ editingId() !== null ? 'Edit Entry' : 'Add ' + (activeTab() === 'income' ? 'Income' : 'Expense') }}</h3>
+      <button class="modal-close" (click)="closeModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" width="18" height="18">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <label>Name</label>
+    <input class="modal-input" type="text" [(ngModel)]="newName" autofocus/>
+
+    <label>Date</label>
+    <input class="modal-input" type="date" [(ngModel)]="newDate"/>
+
+    <label>Amount</label>
+    <div class="amount-wrap">
+      <span class="euro-sign">€</span>
+      <input class="modal-input amount-input" type="number"
+             step="0.01" placeholder="0.00" [(ngModel)]="newAmount"/>
+    </div>
+
+    <label>Tags</label>
+    <div class="modal-tags">
+      <button *ngFor="let tagDef of currentTagDefs()"
+              class="modal-tag" [ngClass]="tagDef.color"
+              [class.selected]="newTags.includes(tagDef.name)"
+              (click)="toggleNewTag(tagDef.name)">+ {{ tagDef.name }}</button>
+    </div>
+
+    <label>Create new tag</label>
+    <div class="custom-tag-row">
+      <input class="modal-input" type="text"
+             placeholder="Tag name…"
+             [(ngModel)]="customTag"
+             (keyup.enter)="addCustomTag()"/>
+      <button class="custom-tag-btn" (click)="addCustomTag()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" width="16" height="16">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="color-picker-row">
+      <span class="color-label">Choose color</span>
+      <div class="color-options">
+        <button *ngFor="let c of allColors"
+                class="color-dot"
+                [ngClass]="c.key"
+                [class.chosen]="selectedCustomColor === c.key"
+                (click)="selectedCustomColor = c.key"
+                [title]="c.label">
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeModal()">Cancel</button>
+      <button class="btn-save" (click)="saveTransaction()">Save</button>
+    </div>
+
+  </div>
+</div>

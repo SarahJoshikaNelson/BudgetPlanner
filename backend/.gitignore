@@ -1,0 +1,67 @@
+# ========================
+# Node.js
+# ========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ========================
+# Angular / Frontend
+# ========================
+.angular/
+dist/
+out-tsc/
+coverage/
+
+# Angular cache (wichtig bei dir!)
+frontend/**/.angular/
+frontend/**/node_modules/
+
+# ========================
+# Backend
+# ========================
+backend/node_modules/
+
+# SQLite DB
+*.db
+*.sqlite
+
+# ========================
+# Environment Files
+# ========================
+.env
+.env.local
+.env.*.local
+
+# ========================
+# Logs
+# ========================
+logs/
+*.log
+
+# ========================
+# OS Files
+# ========================
+.DS_Store
+Thumbs.db
+
+# ========================
+# IDE / Editor
+# ========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ========================
+# Build / Temp
+# ========================
+tmp/
+temp/
+
+# ========================
+# Misc
+# ========================
+*.lock

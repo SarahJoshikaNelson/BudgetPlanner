@@ -1,0 +1,276 @@
+<div class="page">
+<div class="notes-root">
+
+  <!-- ══════ LIST VIEW ══════ -->
+  <div class="list-view animate-in" *ngIf="view === 'list'">
+    <h1 class="page-title">Notes</h1>
+
+    <!-- Guide trigger -->
+    <button class="guide-trigger" (click)="guideOpen = !guideOpen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
+        <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+      </svg>
+      Guide
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"
+        [style.transform]="guideOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
+        style="transition: transform 0.2s;">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+
+    <!-- Guide panel -->
+    <div class="guide-panel" [class.guide-open]="guideOpen">
+      <div class="guide-inner">
+        <div class="guide-grid">
+          <div class="guide-card" [class.guide-active]="guideTab === 'create'" (click)="guideTab = 'create'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            <span>Create & organise</span>
+          </div>
+          <div class="guide-card" [class.guide-active]="guideTab === 'edit'" (click)="guideTab = 'edit'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            <span>Rich text editor</span>
+          </div>
+          <div class="guide-card" [class.guide-active]="guideTab === 'at'" (click)="guideTab = 'at'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg>
+            <span>@ shortcut</span>
+          </div>
+          <div class="guide-card" [class.guide-active]="guideTab === 'export'" (click)="guideTab = 'export'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Export</span>
+          </div>
+          <div class="guide-card" [class.guide-active]="guideTab === 'undo'" (click)="guideTab = 'undo'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>
+            <span>Delete & undo</span>
+          </div>
+          <div class="guide-card" [class.guide-active]="guideTab === 'meta'" (click)="guideTab = 'meta'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="16" height="16"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <span>Metadata & autosave</span>
+          </div>
+        </div>
+
+        <div class="guide-detail" *ngIf="guideTab">
+          <ng-container *ngIf="guideTab === 'create'">
+            <div class="guide-step"><span class="gs-num">1</span><span class="gs-text">Click <strong>+ New Note</strong> top right — a blank note opens immediately in the editor.</span></div>
+            <div class="guide-step"><span class="gs-num">2</span><span class="gs-text">Switch between <strong>All</strong> and <strong>Favorites</strong> tabs to filter your notes list.</span></div>
+            <div class="guide-step"><span class="gs-num">3</span><span class="gs-text">Use the <strong>search box</strong> to filter notes by title in real time.</span></div>
+            <div class="guide-step"><span class="gs-num">4</span><span class="gs-text">Hover any card and click the <strong>★ star</strong> icon to favorite it — turns amber when active.</span></div>
+            <div class="guide-step"><span class="gs-num">5</span><span class="gs-text">Click anywhere on a card to open it in the editor.</span></div>
+          </ng-container>
+          <ng-container *ngIf="guideTab === 'edit'">
+            <div class="guide-step"><span class="gs-num">1</span><span class="gs-text">The large input at the top is the <strong>title</strong> — changes autosave instantly.</span></div>
+            <div class="guide-step"><span class="gs-num">2</span><span class="gs-text">The <strong>format toolbar</strong> has Bold, Italic, Underline, Strikethrough, H1, H2, bullet list, ordered list, and blockquote.</span></div>
+            <div class="guide-step"><span class="gs-num">3</span><span class="gs-text">Select text first, then click a toolbar button to apply formatting.</span></div>
+            <div class="guide-step"><span class="gs-num">4</span><span class="gs-text">German <strong>spellcheck</strong> is active in the writing area automatically.</span></div>
+            <div class="guide-step"><span class="gs-num">5</span><span class="gs-text">Hit <strong>Back</strong> top-left to return to the list without losing anything.</span></div>
+          </ng-container>
+          <ng-container *ngIf="guideTab === 'at'">
+            <div class="guide-step"><span class="gs-num">1</span><span class="gs-text">In any note, type a line starting with <code class="gs-code">@</code> in this format:</span></div>
+            <div class="guide-at-demo">
+              <div class="guide-at-line">@Freelance Payment, 05.06.2026, 800, Extra, income</div>
+              <div class="guide-at-popup">
+                <span>Add <strong>Freelance Payment</strong> (800€, income) as transaction?</span>
+                <button class="guide-at-confirm">✓ Add</button>
+                <span class="guide-at-dismiss">✕</span>
+              </div>
+            </div>
+            <div class="guide-step"><span class="gs-num">2</span><span class="gs-text">Format: <code class="gs-code">@name, date, amount, tag, type</code> — type is <code class="gs-code">income</code> or <code class="gs-code">expense</code>.</span></div>
+            <div class="guide-step"><span class="gs-num">3</span><span class="gs-text">A popup appears — hit <strong>✓ Add</strong> to confirm or <strong>✕</strong> to dismiss.</span></div>
+            <div class="guide-step"><span class="gs-num">4</span><span class="gs-text">On confirm the line becomes a chip and the transaction appears in Income/Expenses instantly.</span></div>
+          </ng-container>
+          <ng-container *ngIf="guideTab === 'export'">
+            <div class="guide-step"><span class="gs-num">1</span><span class="gs-text">Open a note in the editor — you must be in editor view to export.</span></div>
+            <div class="guide-step"><span class="gs-num">2</span><span class="gs-text">Click <strong>.txt</strong> to download a plain text version of the note content.</span></div>
+            <div class="guide-step"><span class="gs-num">3</span><span class="gs-text">Click <strong>PDF</strong> to generate a formatted PDF with title and content, ready to share or print.</span></div>
+          </ng-container>
+          <ng-container *ngIf="guideTab === 'undo'">
+            <div class="guide-step"><span class="gs-num">1</span><span class="gs-text">Hover a note card and click the <strong>trash icon</strong> bottom-right — the note is removed immediately.</span></div>
+            <div class="guide-step"><span class="gs-num">2</span><span class="gs-text">A snackbar appears at the bottom with an <strong>Undo</strong> button — you have <strong>4 seconds</strong> to tap it.</span></div>
+            <div class="guide-step"><span class="gs-num">3</span><span class="gs-text">On undo, the note fully restores — title, content, and favorite status all come back exactly as they were.</span></div>
+          </ng-container>
+          <ng-container *ngIf="guideTab === 'meta'">
+            <div class="guide-step"><span class="gs-num">1</span><span class="gs-text"><strong>Word count</strong> — shown as "X words" in the editor header, updates live as you type.</span></div>
+            <div class="guide-step"><span class="gs-num">2</span><span class="gs-text"><strong>Relative date</strong> — shows "Just now", "5 min ago", "Yesterday", or a full date based on last edit time.</span></div>
+            <div class="guide-step"><span class="gs-num">3</span><span class="gs-text">A green <strong>✓ Saved</strong> label flashes top-right in the editor whenever you type — fades after 2 seconds.</span></div>
+            <div class="guide-step"><span class="gs-num">4</span><span class="gs-text">Each card and the editor header show the original <strong>creation date</strong> in dd.MM.yyyy format.</span></div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <!-- Note count -->
+    <p class="notes-count">{{ displayNotes.length }} Notes</p>
+
+    <!-- Top bar -->
+    <div class="list-topbar">
+      <div class="topbar-left">
+        <div class="tab-switcher">
+          <button class="tab-btn" [class.active]="navSection === 'all'" (click)="setNav('all')">All</button>
+          <button class="tab-btn" [class.active]="navSection === 'favorites'" (click)="setNav('favorites')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            Favorites
+          </button>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="text" placeholder="Search…"
+            [ngModel]="filter.searchQuery"
+            (ngModelChange)="onSearch($event)" />
+        </div>
+
+        <!-- New note — hidden in view-only -->
+        <button class="btn-new" (click)="newNote()" *ngIf="!isViewOnly">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          New Note
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="notes-empty" *ngIf="displayNotes.length === 0">
+      <p>Create your first note.</p>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="notes-grid" *ngIf="displayNotes.length > 0">
+      <div class="note-card" *ngFor="let note of displayNotes; trackBy: trackById" (click)="openNote(note)">
+
+        <!-- Favorite — always allowed (read action) -->
+        <button class="card-fav" [class.active]="note.isFavorite"
+                (click)="toggleFav(note.id, $event)" title="Favorite"
+                *ngIf="!isViewOnly">
+          <svg viewBox="0 0 24 24" [attr.fill]="note.isFavorite ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </button>
+        <!-- View-only: show star as static indicator only -->
+        <span class="card-fav active" *ngIf="isViewOnly && note.isFavorite" style="pointer-events:none">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </span>
+
+        <h3 class="card-title">{{ note.title }}</h3>
+
+        <div class="card-date">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          {{ note.createdAt | date:'dd.MM.yyyy' }}
+        </div>
+
+        <!-- Delete — hidden in view-only -->
+        <button class="card-delete" (click)="deleteNote(note.id, $event)" title="Delete" *ngIf="!isViewOnly">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
+            <path d="M10 11v6M14 11v6M9 6V4h6v2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ DETAIL / EDITOR VIEW ══════ -->
+  <div class="detail-view animate-in" *ngIf="view === 'detail' && selected">
+
+    <div class="detail-topbar">
+      <button class="btn-back" (click)="goBack()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Back
+      </button>
+      <div class="detail-topbar-right">
+        <!-- Autosave indicator — only meaningful if editable -->
+        <span class="autosave" [class.show]="autoSaved" *ngIf="!isViewOnly">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Saved
+        </span>
+        <button class="btn-action" (click)="exportNote('txt')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          .txt
+        </button>
+        <button class="btn-action primary" (click)="exportNote('pdf')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+          </svg>
+          PDF
+        </button>
+      </div>
+    </div>
+
+    <div class="editor-card">
+
+      <div class="editor-header">
+        <!-- Title: editable normally, plain text in view-only -->
+        <input *ngIf="!isViewOnly"
+          type="text" class="editor-title" placeholder="Title…"
+          [ngModel]="selected.title" (ngModelChange)="onTitleChange($event)" />
+        <h2 *ngIf="isViewOnly" class="editor-title" style="border:none; background:none; cursor:default;">
+          {{ selected.title }}
+        </h2>
+
+        <div class="editor-meta">
+          <span class="editor-meta-date">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            {{ selected.createdAt | date:'dd.MM.yyyy' }}
+          </span>
+          <span class="editor-meta-sep">·</span>
+          <span class="editor-meta-date">{{ relativeDate(selected.updatedAt) }}</span>
+          <span class="editor-meta-sep">·</span>
+          <span class="editor-meta-date">{{ wordCount }} words</span>
+        </div>
+      </div>
+
+      <!-- Format toolbar — hidden in view-only -->
+      <div class="format-toolbar" *ngIf="!isViewOnly">
+        <button *ngFor="let btn of formatButtons" class="fmt-btn"
+                [title]="btn.title" (mousedown)="execFormat(btn, $event)">{{ btn.icon }}</button>
+      </div>
+
+      <!-- @ popup — hidden in view-only -->
+      <div class="at-popup" *ngIf="atPreview && !isViewOnly">
+        <span class="at-popup-text">
+          Add <strong>{{ atPreview.name }}</strong>
+          ({{ atPreview.amount }}€, {{ atPreview.type }}) as transaction?
+        </span>
+        <button class="at-confirm" (click)="confirmAtTransaction()">✓ Add</button>
+        <button class="at-dismiss" (click)="dismissAt()">✕</button>
+      </div>
+
+      <!-- Rich editor: editable normally, readonly in view-only -->
+      <div #editor class="rich-editor"
+           [attr.contenteditable]="isViewOnly ? 'false' : 'true'"
+           [attr.data-ph]="isViewOnly ? '' : 'Start writing…'"
+           (input)="!isViewOnly && onContentInput($event)"
+           [style.cursor]="isViewOnly ? 'default' : 'text'"
+           [style.opacity]="isViewOnly ? '0.85' : '1'"
+           spellcheck="true" lang="en">
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
